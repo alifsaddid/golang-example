@@ -1,0 +1,41 @@
+version: "3.0"
+services:
+  influxdb:
+    image: influxdb:1.8-alpine
+    env_file: configuration.env
+    ports:
+      - "8086:8086"
+    volumes:
+      - type: bind
+        source: ./config/influxdb-init.iql
+        target: /docker-entrypoint-initdb.d
+      - influxdb_data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:8.0.2
+    depends_on:
+      - influxdb
+    env_file:
+      - configuration.env
+    links:
+      - influxdb
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/dashboards/:/var/lib/grafana/dashboards/
+      - ./grafana/plugins/:/var/lib/grafana/plugins/
+
+  k6:
+    image: loadimpact/k6:latest
+    volumes:
+      - type: bind
+        source: ./scripts
+        target: /k6-script/
+        
+volumes:
+  grafana_data:
+    driver: local
+  influxdb_data:
+    driver: local

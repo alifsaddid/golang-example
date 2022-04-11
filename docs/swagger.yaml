@@ -1,0 +1,155 @@
+basePath: /
+definitions:
+  request.RoleRequest:
+    properties:
+      name:
+        type: string
+      permissions:
+        items:
+          type: integer
+        type: array
+    type: object
+  response.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      scope:
+        type: string
+      token_type:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: OAuth API Muhammad Alif Saddid
+  title: OAuth API
+paths:
+  /oauth/resource:
+    post:
+      description: Resource endpoint
+      parameters:
+      - description: Access Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.TokenResponse'
+      summary: Resource
+      tags:
+      - Auth
+  /oauth/token:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Login endpoint to obtain OAuth token
+      parameters:
+      - in: formData
+        name: client_id
+        required: true
+        type: string
+      - in: formData
+        name: client_secret
+        required: true
+        type: string
+      - in: formData
+        name: grant_type
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.TokenResponse'
+      summary: Token
+      tags:
+      - Auth
+  /roles:
+    get:
+      description: Endpoint for get all roles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Get All Role
+      tags:
+      - Roles
+    post:
+      description: Endpoint for create a new role
+      parameters:
+      - description: Request body
+        in: body
+        name: Role
+        required: true
+        schema:
+          $ref: '#/definitions/request.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Create Role
+      tags:
+      - Roles
+  /roles/{id}:
+    get:
+      description: Endpoint for get role by id
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Get Role by Id
+      tags:
+      - Roles
+    put:
+      description: Endpoint for update a role
+      parameters:
+      - description: Request body
+        in: body
+        name: Role
+        required: true
+        schema:
+          $ref: '#/definitions/request.RoleRequest'
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Update Role
+      tags:
+      - Roles
+schemes:
+- http
+- https
+swagger: "2.0"

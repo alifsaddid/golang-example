@@ -1,0 +1,26 @@
+# config file version
+apiVersion: 1
+
+# list of datasources that should be deleted from the database
+deleteDatasources:
+  - name: Influxdb
+    orgId: 1
+
+# list of datasources to insert/update depending
+# whats available in the database
+datasources:
+  - name: InfluxK6DB
+    type: influxdb
+    access: Server
+    orgId: 1
+    uid: k6db-influx
+    url: http://influxdb:8086
+    database: k6db
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      timeInterval: 10s
+      httpMode: POST
+      maxSeries: 1000
+    version: 1
+    editable: true
